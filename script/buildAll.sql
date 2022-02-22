@@ -1,0 +1,166 @@
+CREATE SCHEMA IF NOT EXISTS MusiCraze;
+USE MusiCraze;
+
+DROP TABLE IF EXISTS PlaylistSongContains;
+DROP TABLE IF EXISTS Playlists;
+DROP TABLE IF EXISTS Comments;
+DROP TABLE IF EXISTS Likes;
+DROP TABLE IF EXISTS Songs;
+DROP TABLE IF EXISTS ArtistEvents;
+DROP TABLE IF EXISTS Administrators;
+DROP TABLE IF EXISTS Users;
+DROP TABLE IF EXISTS Albums;
+DROP TABLE IF EXISTS Artists;
+DROP TABLE IF EXISTS Persons;
+
+CREATE TABLE Persons (
+    UserName VARCHAR(255),
+    `Password` VARCHAR(255),
+    FirstName VARCHAR(255),
+    LastName VARCHAR(255),
+    Email VARCHAR(255),
+    CONSTRAINT pk_Persons_UserName PRIMARY KEY (UserName)
+);
+
+
+CREATE TABLE Artists (
+    ArtistId  INT AUTO_INCREMENT,
+    ArtistName  VARCHAR(200),
+    ArtistSptifyId  VARCHAR(100),
+    ArtistCountry  VARCHAR(100) DEFAULT NULL,
+    ArtistRecordLabel  VARCHAR(100),
+    CONSTRAINT pk_Artists_ArtistId PRIMARY KEY (ArtistId)
+);
+
+
+CREATE TABLE Albums(
+  AlbumId VARCHAR(255),
+  Name VARCHAR(255),
+  Year INT,
+  ReleaseDate DATE,
+  Duration INT, /* millisecond */
+  CONSTRAINT Pk_albums_album_id
+    PRIMARY KEY (AlbumId)
+);
+
+CREATE TABLE Users (
+    UserName VARCHAR(255),
+    Avatar VARCHAR(255),
+    Bio VARCHAR(1023),
+    BornDate DATE,
+    JoinDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_Users_UserName PRIMARY KEY (UserName),
+    CONSTRAINT fk_Users_UserName FOREIGN KEY (UserName)
+        REFERENCES Persons(UserName)
+        ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE Administrators (
+    UserName VARCHAR(255),
+    CONSTRAINT pk_Administrators_UserName PRIMARY KEY (UserName),
+    CONSTRAINT fk_Administrators_UserName FOREIGN KEY (UserName)
+        REFERENCES Persons(UserName)
+        ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE ArtistEvents (
+	EventId  INT AUTO_INCREMENT,
+    ArtistId  INT,
+    EventType  VARCHAR(100),
+    EventTime   DATETIME,
+    EventLocation  VARCHAR(200),
+    EventUri   VARCHAR(200),
+    CONSTRAINT pk_ArtistEvents_EventId PRIMARY KEY (EventId),
+    	CONSTRAINT fk_ArtistEvents_ArtistId FOREIGN KEY (ArtistId)
+		REFERENCES Artists(ArtistId)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE Songs(
+  SongId INT AUTO_INCREMENT,
+  SongName VARCHAR(100) NOT NULL,
+  ArtistId VARCHAR(40),
+  AlbumId VARCHAR(40),
+  CONSTRAINT pk_Songs_SongId PRIMARY KEY (SongId),
+  CONSTRAINT fk_Songs_ArtistId FOREIGN KEY (ArtistId)
+	REFERENCES Artists(ArtistsId)
+	ON UPDATE CASCADE ON DELETE CASCADE,
+CONSTRAINT fk_Songs_AlbumId FOREIGN KEY (AlbumId)
+	REFERENCES Albums(AlbumId)
+	ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE Likes(
+    LikeId INT AUTO_INCREMENT,
+    UserName INT NOT NULL,
+    SongId INT NOT NULL,
+    CreatedAt DATE,
+    CONSTRAINT pk_Likes_LikeId PRIMARY KEY(LikeId),
+    CONSTRAINT fk_Likes_UserName FOREIGN KEY(UserName) 
+		REFERENCES Persons(UserName)
+		ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT fk_Likes_SongId FOREIGN KEY(SongId)
+		REFERENCES Songs(SongId)
+        		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE Comments(
+    CommentId INT AUTO_INCREMENT,
+    UserName INT NOT NULL,
+    SongId INT NOT NULL,
+    Content VARCHAR(200),
+    CreatedAt DATE,
+    CONSTRAINT pk_Comments_CommentId PRIMARY KEY(CommentId),
+    CONSTRAINT fk_Comments_UserName FOREIGN KEY(UserName)
+		REFERENCES Persons(UserName)
+        		ON UPDATE CASCADE ON DELETE SET NULL,
+    CONSTRAINT kf_Comments_SongId FOREIGN KEY(SongId)
+		REFERENCES Songs(SongId)
+		ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Playlists(
+  PlaylistId INT AUTO_INCREMENT,
+  UserName VARCHAR(255) NOT NULL,
+  PlaylistName VARCHAR(100),
+  Description VARCHAR(500),
+  # With a DEFAULT clause but no ON UPDATE CURRENT_TIMESTAMP clause, 
+  # the column has the given default value and is NOT automatically updated to the current timestamp.
+  CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  
+  # With both DEFAULT CURRENT_TIMESTAMP and ON UPDATE CURRENT_TIMESTAMP, 
+  # the column has the current timestamp for its default value and 
+  # is automatically updated to the current timestamp.
+  # Reference: https://dev.mysql.com/doc/refman/8.0/en/timestamp-initialization.html
+  UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  CONSTRAINT pk_Playlists_PlaylistId
+    PRIMARY KEY (PlaylistId),
+  CONSTRAINT fk_Playlists_UserName
+    FOREIGN KEY (UserName)
+    REFERENCES Users(UserName)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+CREATE TABLE PlaylistSongContains(
+  ContainId INT AUTO_INCREMENT,
+  PlaylistId INT NOT NULL,
+  SongId INT NOT NULL,
+  CONSTRAINT pk_PlayListSongContains_ContainId
+    PRIMARY KEY (ContainId),
+  CONSTRAINT fk_PlayListSongContains_PlaylistId
+    FOREIGN KEY (PlaylistId)
+    REFERENCES Playlists(PlaylistId)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_PlayListSongContains_SongId
+    FOREIGN KEY (SongId)
+    REFERENCES Songs(SongId)
+    ON UPDATE CASCADE ON DELETE CASCADE
+
+);
