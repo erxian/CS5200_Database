@@ -36,9 +36,11 @@ CREATE TABLE Artists (
 CREATE TABLE Albums (
   Name VARCHAR(5000),
   AlbumId VARCHAR(100),
+  AlbumSpotifyId VARCHAR(100),
   Year INT,
   ReleaseDate DATE,
   Duration INT, /* millisecond */
+  
   CONSTRAINT Pk_albums_album_id
     PRIMARY KEY (AlbumId)
 );
