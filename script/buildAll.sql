@@ -219,7 +219,11 @@ LOAD DATA INFILE '/CS5200_GROUP/data/playlists.csv' INTO TABLE Playlists
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES;
 
-###### ============ LOAD PlaylistSongContains =========
+
+LOAD DATA INFILE '/CS5200_GROUP/data/playlistsongcontains.csv' INTO TABLE PlaylistSongContains
+  FIELDS TERMINATED BY ','    # Don't need ENCLOSED BY. CSV contains only numbers, and therefore datas are not quoted.
+	LINES TERMINATED BY '\n'
+	IGNORE 1 LINES;
 
 UPDATE Songs s, Artists a
 	SET s.ArtistId = a.ArtistId
