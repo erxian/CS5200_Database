@@ -33,11 +33,11 @@ CREATE TABLE Artists (
 );
 
 
-CREATE TABLE Albums(
-  AlbumId VARCHAR(255),
-  Name VARCHAR(255),
+CREATE TABLE Albums (
+  Name VARCHAR(100),
+  AlbumId VARCHAR(100),
   Year INT,
-  ReleaseDate DATE,
+  ReleaseDate VARCHAR(50),
   Duration INT, /* millisecond */
   CONSTRAINT Pk_albums_album_id
     PRIMARY KEY (AlbumId)
@@ -180,7 +180,7 @@ CREATE TABLE PlaylistSongContains(
 
 );
 
-LOAD DATA INFILE '/tmp/persons.csv' INTO TABLE Persons
+LOAD DATA INFILE '/CS5200_GROUP/data/persons.csv' INTO TABLE Persons
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
@@ -192,15 +192,19 @@ LOAD DATA INFILE '/CS5200_GROUP/data/artist.csv' INTO TABLE Artists
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES (ArtistName,ArtistSpotifyId);
 
-###### ============ LOAD ALBUM =========
+LOAD DATA LOCAL
+		INFILE '/Users/s.heng/Desktop/NEU/22Spring/CS5200/Project/pm2/album.csv'
+		INTO TABLE Albums FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+		LINES TERMINATED BY '\n'
+        IGNORE 1 LINES (Name, AlbumId, Year, ReleaseDate, Duration);
 
-LOAD DATA INFILE '/tmp/users.csv' INTO TABLE Users
+LOAD DATA INFILE '/CS5200_GROUP/data/users.csv' INTO TABLE Users
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
     IGNORE 1 LINES;
 
-LOAD DATA INFILE '/tmp/administrators.csv' INTO TABLE Administrators
+LOAD DATA INFILE 'CS5200_GROUP/data/administrators.csv' INTO TABLE Administrators
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
