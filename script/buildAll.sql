@@ -37,7 +37,7 @@ CREATE TABLE Albums (
   Name VARCHAR(100),
   AlbumId VARCHAR(100),
   Year INT,
-  ReleaseDate VARCHAR(50),
+  ReleaseDate DATE,
   Duration INT, /* millisecond */
   CONSTRAINT Pk_albums_album_id
     PRIMARY KEY (AlbumId)
