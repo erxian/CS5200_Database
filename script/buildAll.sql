@@ -180,18 +180,46 @@ CREATE TABLE PlaylistSongContains(
 
 );
 
+LOAD DATA INFILE '/tmp/persons.csv' INTO TABLE Persons
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 LINES;
+    
 
 LOAD DATA INFILE '/CS5200_GROUP/data/artist.csv' INTO TABLE Artists
 	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES (ArtistName,ArtistSpotifyId);
 
+###### ============ LOAD ALBUM =========
+
+LOAD DATA INFILE '/tmp/users.csv' INTO TABLE Users
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 LINES;
+
+LOAD DATA INFILE '/tmp/administrators.csv' INTO TABLE Administrators
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 LINES;
+    
+###### ============ LOAD ARTIST EVENTS =========
 
 LOAD DATA INFILE '/CS5200_GROUP/data/songs.csv' INTO TABLE Songs
 	FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 	LINES TERMINATED BY '\r\n'
 	IGNORE 1 LINES (SongId,SongName,SpotifyId,ArtistSpotifyId,AlbumSpotifyId);
 
+
+LOAD DATA INFILE '/CS5200_GROUP/data/playlists.csv' INTO TABLE Playlists
+  FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 LINES;
+
+###### ============ LOAD PlaylistSongContains =========
 
 UPDATE Songs s, Artists a
 	SET s.ArtistId = a.ArtistId
