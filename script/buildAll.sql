@@ -111,7 +111,7 @@ CONSTRAINT fk_Songs_AlbumId FOREIGN KEY (AlbumId)
 
 CREATE TABLE Likes(
     LikeId INT NOT NULL AUTO_INCREMENT,
-    UserName VARCHAR(255) NOT NULL,
+    UserName VARCHAR(255),
     SongId INT NOT NULL,
     CreatedAt DATE,
     CONSTRAINT pk_Likes_LikeId PRIMARY KEY(LikeId),
@@ -126,7 +126,7 @@ CREATE TABLE Likes(
 
 CREATE TABLE Comments(
     CommentId INT NOT NULL AUTO_INCREMENT,
-    UserName VARCHAR(255) NOT NULL,
+    UserName VARCHAR(255),
     SongId INT NOT NULL,
     Content VARCHAR(200),
     CreatedAt DATE,
