@@ -220,6 +220,12 @@ LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS
 	IGNORE 1 LINES (SongId,SongName,SpotifyId,ArtistSpotifyId,AlbumSpotifyId);
 
 
+LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/likes.csv' INTO TABLE Playlists
+  FIELDS TERMINATED BY ',' ENCLOSED BY '"'
+	LINES TERMINATED BY '\n'
+	IGNORE 1 LINES (UserName, PlaylistName, Description, CreatedAt, UpdatedAt);
+
+
 LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/playlists.csv' INTO TABLE Playlists
   FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 	LINES TERMINATED BY '\n'
