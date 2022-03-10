@@ -245,6 +245,25 @@ LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS
 
 
 
+#### ==== Insert Coldplay's(a specific artist's) Songs data ======
+
+LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/coldplay.csv' INTO TABLE Songs
+  FIELDS TERMINATED BY ','
+  LINES TERMINATED BY '\n'
+  IGNORE 1 LINES (SongName,SpotifyId,ArtistSpotifyId,AlbumSpotifyId);
+
+# Updated ArtistId and AlbumId field:
+UPDATE Songs s, Artists a
+	SET s.ArtistId = a.ArtistId
+    WHERE s.ArtistSpotifyId = a.ArtistSpotifyId and s.ArtistSpotifyId = '4gzpq5DPGxSnKTe4SA8HAU';  # Coldplay's ArtistSpotifyId
+    
+UPDATE Songs s, Albums a
+	SET s.AlbumId = a.AlbumId
+    WHERE s.AlbumSpotifyId = a.AlbumSpotifyId and s.ArtistSpotifyId = '4gzpq5DPGxSnKTe4SA8HAU'; 
+
+
+
+
 LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/likes.csv' INTO TABLE Likes
   FIELDS TERMINATED BY ',' ENCLOSED BY '"'
 	LINES TERMINATED BY '\n'
@@ -267,8 +286,14 @@ LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES (PlaylistId, SongId);
   
-LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/Project/second_hand_songs/data/Covers1-1000.csv ' INTO TABLE Covers  # testData/result.csv
-  FIELDS TERMINATED BY ',' ENCLOSED BY '"'    # Don't need ENCLOSED BY. CSV contains only numbers, and therefore datas are not quoted.
+  
+LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/Covers1-1000.csv' INTO TABLE Covers  # testData/result.csv
+  FIELDS TERMINATED BY ',' ENCLOSED BY '"'    
+	LINES TERMINATED BY '\n'
+	IGNORE 1 LINES (CoverName, PerformerName, YoutubeUrl, SongId);
+
+LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/ColdPlayCovers_created_Mar10.csv' INTO TABLE Covers  # testData/result.csv
+  FIELDS TERMINATED BY ',' ENCLOSED BY '"'    
 	LINES TERMINATED BY '\n'
 	IGNORE 1 LINES (CoverName, PerformerName, YoutubeUrl, SongId);
 
@@ -282,21 +307,7 @@ LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/Pr
 
 
 
-#### ==== Insert Coldplay's(a specific artist's) Songs data ======
 
-LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/Project/PM3/coldplay.csv' INTO TABLE Songs
-  FIELDS TERMINATED BY ','
-  LINES TERMINATED BY '\n'
-  IGNORE 1 LINES (SongName,SpotifyId,ArtistSpotifyId,AlbumSpotifyId);
-
-# Updated ArtistId and AlbumId field:
-UPDATE Songs s, Artists a
-	SET s.ArtistId = a.ArtistId
-    WHERE s.ArtistSpotifyId = a.ArtistSpotifyId and s.ArtistSpotifyId = '4gzpq5DPGxSnKTe4SA8HAU';  # Coldplay's ArtistSpotifyId
-    
-UPDATE Songs s, Albums a
-	SET s.AlbumId = a.AlbumId
-    WHERE s.AlbumSpotifyId = a.AlbumSpotifyId and s.ArtistSpotifyId = '4gzpq5DPGxSnKTe4SA8HAU'; 
 
 
 
@@ -340,9 +351,12 @@ UPDATE Songs s, Albums a
 -- CREATE TABLE TempSongsArtists AS 
 --   (SELECT SongId, SongName, ArtistName
 --    FROM Songs INNER JOIN Artists ON Songs.ArtistId = Artists.ArtistId);
-  
-  
-  
+--   
+--   
+-- LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/Project/second_hand_songs/data/songsWithArtistAlbumIdPlusColdplay.csv ' INTO TABLE Covers  # testData/result.csv
+--   FIELDS TERMINATED BY ',' ENCLOSED BY '"'    # Don't need ENCLOSED BY. CSV contains only numbers, and therefore datas are not quoted.
+-- 	LINES TERMINATED BY '\n'
+-- 	IGNORE 1 LINES (CoverName, PerformerName, YoutubeUrl, SongId);
   
   
   
@@ -403,38 +417,3 @@ UPDATE Songs s, Albums a
 -- --   SET TestSongs.AlbumId = NULL
 -- --     WHERE TestSongs.AlbumId = 0;
 --     
---  
--- DROP TABLE IF EXISTS Songs;
---     
--- # use ArtistSpotifyId & AlbumSpotifyId to bridge ArtistId & AlbumId
--- CREATE TABLE Songs (
--- 	SongId  INT AUTO_INCREMENT,
--- 	SongName  VARCHAR(5000) NOT NULL,
---     SpotifyId VARCHAR(100),
--- 	   ArtistSpotifyId  VARCHAR(100),
---     ArtistId  INT,
---     AlbumSpotifyId VARCHAR(100),
---     AlbumId INT,
---  CONSTRAINT pk_Songs_SongId PRIMARY KEY (SongId)
---  #CONSTRAINT fk_Songs_ArtistId FOREIGN KEY (ArtistId)
--- 	#REFERENCES Artists(ArtistId)
--- 	#ON UPDATE CASCADE ON DELETE SET NULL 
---  #CONSTRAINT fk_Songs_AlbumId FOREIGN KEY (AlbumId)
--- 	#REFERENCES Albums(AlbumId)
--- 	#ON UPDATE CASCADE ON DELETE SET NULL
--- );
--- 
--- LOAD DATA LOCAL INFILE '/Users/cindychen/Documents/NEU/Course_Material/cs5200/CS5200_GROUP/data/songsWithArtistAlbumId.csv' INTO TABLE Songs
---   FIELDS TERMINATED BY ',' ENCLOSED BY '"' 
---   LINES TERMINATED BY '\n'
---   IGNORE 1 LINES (SongId,SongName,SpotifyId,ArtistSpotifyId,ArtistId, AlbumSpotifyId, AlbumId);
--- 
--- 
--- UPDATE TestSongs
---   SET TestSongs.ArtistId = NULL
---     WHERE TestSongs.ArtistId = 0;
--- 
--- UPDATE TestSongs
---   SET TestSongs.AlbumId = NULL
---     WHERE TestSongs.AlbumId = 0;
--- 
