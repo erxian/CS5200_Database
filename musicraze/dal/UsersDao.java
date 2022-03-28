@@ -119,6 +119,30 @@ public class UsersDao extends PersonsDao {
     }
   }
 
+  public Users updatePassword(Users user, String newPassword) throws SQLException {
+    super.updatePassword(user, newPassword);
+    user.setPassword(newPassword);
+    return user;
+  }
+
+  public Users updateFirstName(Users user, String newFirstName) throws SQLException {
+    super.updateFirstName(user, newFirstName);
+    user.setFirstName(newFirstName);
+    return user;
+  }
+
+  public Users updateLastName(Users user, String newLastName) throws SQLException {
+    super.updateLastName(user, newLastName);
+    user.setLastName(newLastName);
+    return user;
+  }
+
+  public Users updateEmail(Users user, String newEmail) throws SQLException {
+    super.updateEmail(user, newEmail);
+    user.setEmail(newEmail);
+    return user;
+  }
+
   public Users updateAvatar(Users user, String newAvatar) throws SQLException {
     Connection connection = null;
     PreparedStatement updateStmt = null;

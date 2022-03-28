@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AdministratorsDao extends PersonsDao{
+public class AdministratorsDao extends PersonsDao {
 
   private static final String INSERT = "INSERT INTO Administrators(UserName) VALUES(?);";
   private static final String SELECT = "SELECT * FROM Administrators WHERE UserName=?;";
@@ -23,7 +23,7 @@ public class AdministratorsDao extends PersonsDao{
     }
     return instance;
   }
-  
+
   public Administrators create(Administrators administrator) throws SQLException {
     Persons person = super.create(administrator);
     Connection connection = null;
@@ -46,7 +46,7 @@ public class AdministratorsDao extends PersonsDao{
       }
     }
   }
-  
+
   public Administrators getAdministratorByUserName(String userName) throws SQLException {
     Persons person = super.getPersonByUserName(userName);
     Connection connection = null;
@@ -76,7 +76,7 @@ public class AdministratorsDao extends PersonsDao{
     }
     return null;
   }
-  
+
   public Administrators delete(Administrators administrator) throws SQLException {
     Connection connection = null;
     PreparedStatement deleteStmt = null;
@@ -101,5 +101,33 @@ public class AdministratorsDao extends PersonsDao{
         deleteStmt.close();
       }
     }
+  }
+
+  public Administrators updatePassword(Administrators administrator, String newPassword)
+      throws SQLException {
+    super.updatePassword(administrator, newPassword);
+    administrator.setPassword(newPassword);
+    return administrator;
+  }
+
+  public Administrators updateFirstName(Administrators administrator, String newFirstName)
+      throws SQLException {
+    super.updateFirstName(administrator, newFirstName);
+    administrator.setFirstName(newFirstName);
+    return administrator;
+  }
+
+  public Administrators updateLastName(Administrators administrator, String newLastName)
+      throws SQLException {
+    super.updateLastName(administrator, newLastName);
+    administrator.setLastName(newLastName);
+    return administrator;
+  }
+
+  public Administrators updateEmail(Administrators administrator, String newEmail)
+      throws SQLException {
+    super.updateEmail(administrator, newEmail);
+    administrator.setEmail(newEmail);
+    return administrator;
   }
 }
