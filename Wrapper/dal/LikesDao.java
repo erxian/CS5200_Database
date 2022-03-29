@@ -1,114 +1,118 @@
 package musicraze.dal;
 
-import musicraze.model.*;
+import musicraze.model.Likes;
+import musicraze.model.Users;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class CommentsDao {
+public class LikesDao {
+
     private static final String INSERT =
-            "INSERT INTO Comments(UserName, SongId, Content, CreatedAt) " +
-                    "VALUES(?,?,?,?);";
+            "INSERT INTO Likes(UserName, SongId, CreatedAt) " +
+                    "VALUES(?,?,?);";
     private static final String SELECT_BY_ID =
-            "SELECT " +
-                    "* FROM Comments " +
-                    "WHERE CommentId = ?;";
+            "SELECT * FROM Likes WHERE LikeId = ?;";
     private static final String SELECT_BY_USERNAME =
             "SELECT * " +
-                    "FROM Comments INNER JOIN Users" +
-                    "ON Users.UserName = Comments.UserName " +
+                    "FROM Likes INNER JOIN Users " +
+                    "ON Users.UserName = Likes.UserName " +
                     "WHERE Users.UserName = ?;";
     private static final String SELECT_BY_SONG_ID =
             "SELECT * " +
-                    "FROM Comments INNER JOIN Songs " +
-                    "ON Songs.SongId = Comments.SongId " +
+                    "FROM Likes INNER JOIN Songs " +
+                    "ON Songs.SongId = Likes.SongId " +
                     "WHERE Songs.SongId = ?;";
-    private static  final String UPDATE =
-            "UPDATE Comments " +
-                    "SET Content = ? " +
-                    "WHERE CommentId = ?;";
     private static final String DELETE =
-            "DELETE FROM Comments " +
-                    "WHERE CommentId = ?;";
-
-    private static CommentsDao instance = null;
+            "DELETE FROM Likes " +
+                    "WHERE LikeId = ?;";
+    private static LikesDao instance = null;
     protected  ConnectionManager connectionManager;
-    protected CommentsDao() {
+
+    protected LikesDao() {
         this.connectionManager = new ConnectionManager();
     }
-    public static CommentsDao getInstance() {
+    public static LikesDao getInstance() {
         if(instance == null) {
-            instance = new CommentsDao();
+            instance = new LikesDao();
         }
         return instance;
     }
 
+
     /**
-     * Create comment and insert into the database
-     * @param comments
+     * Create a like and insert into the database;
+     * @param like
      * @return
      * @throws SQLException
      */
-    public Comments create(Comments comments) throws SQLException {
+    public Likes create(Likes like) throws SQLException{
         Connection connection = null;
         PreparedStatement insertStmt = null;
         ResultSet resultKey = null;
         try {
             connection = this.connectionManager.getConnection();
             insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
-            insertStmt.setString(1, comments.getUser().getUserName());
-            insertStmt.setInt(2, comments.getSong().getSongId());
-            insertStmt.setString(3, comments.getContent());
-            insertStmt.setDate(4, (java.sql.Date) (comments.getCreatedAt()));
+            insertStmt.setString(1, like.getUser().getUserName());
+            insertStmt.setInt(2, like.getSong().getSongId);
+            insertStmt.setDate(3, (java.sql.Date) like.getCreatedAt());
             insertStmt.executeUpdate();
 
-            int commentId = -1;
+            resultKey = insertStmt.getGeneratedKeys();
+            int likeId = -1;
             if(resultKey.next()) {
-                commentId = resultKey.getInt(1);
+                likeId = resultKey.getInt(1);
             } else {
-                throw new SQLException("Unable to retrieve auto-generated key.");
+                throw new SQLException("Unable to retrieve auto-generated key");
             }
-            comments.setCommentId(commentId);
-            return comments;
+
+            like.setLikeId(likeId);
+            return like;
         } catch (SQLException e) {
             e.printStackTrace();
             throw e;
         } finally {
-            if (connection != null) {
+            if(connection != null) {
                 connection.close();
             }
-            if (insertStmt != null) {
+            if(insertStmt != null) {
                 insertStmt.close();
+            }
+            if(resultKey != null) {
+                resultKey.close();
             }
         }
     }
 
+
     /**
-     * Get comment by its id
+     * Get the like by its likeId
      * @param id
      * @return
      * @throws SQLException
      */
-    public Comments getCommentByCommentId(int id) throws SQLException {
+    public Likes getLikeByLikeId(int id) throws SQLException{
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
+
         try {
             connection = this.connectionManager.getConnection();
             selectStmt = connection.prepareStatement(SELECT_BY_ID);
             selectStmt.setInt(1, id);
             results = selectStmt.executeQuery();
             if (results.next()) {
-                int commentId = results.getInt("CommentId");
-                String userName = results.getString("UserName");
-                int songId = results.getInt("SongId");
-                String content = results.getString("Content");
-                Date createdAt = results.getDate("CreatedAt");
+               int likeId = results.getInt("LikeId");
+               String userName = results.getString("UserName");
+               int songId = results.getInt("SongId");
+               Date createdAt = results.getDate("CreatedAt");
 
-                Users user = UsersDao.getInstance().getUserByUserName(userName);
-                Songs song = SongsDao.getInstance().getSongById(songId);
-                Comments comment = new Comments(commentId, user, song, content, createdAt);
-                return comment;
+               Users user = UsersDao.getInstance().getUserByUserName(userName);
+               Song song = SongsDao.getInstance().getSongById(songId);
+
+               Likes like = new Likes(likeId, user, song, createdAt);
+               return like;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -127,15 +131,14 @@ public class CommentsDao {
         return null;
     }
 
-
     /**
-     * Get comments by their username
+     * Get the likes created by the UserName
      * @param userName
      * @return
      * @throws SQLException
      */
-    public List<Comments> getCommentsByUserName(String userName) throws SQLException {
-        List<Comments> list = new ArrayList<>();
+    public List<Likes> getLikesByUserName(String userName) throws SQLException {
+        List<Likes> list = new ArrayList<>();
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
@@ -147,17 +150,16 @@ public class CommentsDao {
             results = selectStmt.executeQuery();
 
             while (results.next()) {
-                int commentId = results.getInt("CommentId");
+                int likeId = results.getInt("LikeId");
                 String resultUserName = results.getString("UserName");
                 int songId = results.getInt("SongId");
-                String content = results.getString("Content");
-                java.util.Date createdAt = results.getDate("CreatedAt");
+                Date createdAt = results.getDate("CreatedAt");
 
                 Users user = UsersDao.getInstance().getUserByUserName(resultUserName);
                 Songs song = SongsDao.getInstance().getSongById(songId);
 
-                Comments comment = new Comments(commentId, user, song,content, createdAt);
-                list.add(comment);
+                Likes like = new Likes(likeId, user, song, createdAt);
+                list.add(like);
             }
 
         } catch (SQLException e) {
@@ -177,15 +179,14 @@ public class CommentsDao {
         return list;
     }
 
-
     /**
-     * Get comments by the songId they belong to
+     * Get the likes by the songId
      * @param id
      * @return
      * @throws SQLException
      */
-    public List<Comments> getCommentsBySongId(int id) throws SQLException {
-        List<Comments> list = new ArrayList<>();
+    public List<Likes> getLikesBySongId(int id) throws SQLException{
+        List<Likes> list = new ArrayList<>();
         Connection connection = null;
         PreparedStatement selectStmt = null;
         ResultSet results = null;
@@ -197,17 +198,16 @@ public class CommentsDao {
             results = selectStmt.executeQuery();
 
             while (results.next()) {
-                int commentId = results.getInt("commentId");
+                int likeId = results.getInt("LikeId");
                 String userName = results.getString("UserName");
                 int songId = results.getInt("SongId");
-                String content = results.getString("Content");
-                java.util.Date createdAt = results.getDate("CreatedAt");
+                Date createdAt = results.getDate("CreatedAt");
 
                 Users user = UsersDao.getInstance().getUserByUserName(userName);
                 Songs song = SongsDao.getInstance().getSongById(songId);
 
-                Comments comment = new Comments(commentId, user, song, content, createdAt);
-                list.add(comment);
+                Likes like = new Likes(likeId, user, song, createdAt);
+                list.add(like);
             }
 
         } catch (SQLException e) {
@@ -229,51 +229,18 @@ public class CommentsDao {
 
 
     /**
-     * Update the content of the comment
-     * @param comment
-     * @param newContent
+     * Delete this like
+     * @param likes
      * @return
      * @throws SQLException
      */
-    public Comments updateContent(Comments comment, String newContent) throws SQLException {
-        Connection connection = null;
-        PreparedStatement updateStmt = null;
-        try {
-            connection = this.connectionManager.getConnection();
-            updateStmt = connection.prepareStatement(UPDATE);
-            updateStmt.setString(1, newContent);
-            updateStmt.setInt(2, comment.getCommentId());
-            updateStmt.executeUpdate();
-
-            comment.setContent(newContent);
-            return comment;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
-            if (updateStmt != null) {
-                updateStmt.close();
-            }
-        }
-    }
-
-
-    /**
-     * Delete this comment
-     * @param comment
-     * @return
-     * @throws SQLException
-     */
-    public Comments delete(Comments comment) throws SQLException {
+    public Likes delete(Likes likes) throws SQLException{
         Connection connection = null;
         PreparedStatement deleteStmt = null;
         try {
             connection = this.connectionManager.getConnection();
             deleteStmt = connection.prepareStatement(DELETE);
-            deleteStmt.setInt(1, comment.getCommentId());
+            deleteStmt.setInt(1, likes.getLikeId());
             deleteStmt.executeUpdate();
             return null;
         } catch (SQLException e) {
@@ -288,5 +255,4 @@ public class CommentsDao {
             }
         }
     }
-
 }
