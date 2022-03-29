@@ -1,6 +1,7 @@
 package musicraze.dal;
 
 import musicraze.model.Likes;
+import musicraze.model.Songs;
 import musicraze.model.Users;
 import java.sql.*;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class LikesDao {
             connection = this.connectionManager.getConnection();
             insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             insertStmt.setString(1, like.getUser().getUserName());
-            insertStmt.setInt(2, like.getSong().getSongId);
+            insertStmt.setInt(2, like.getSong().getSongId());
             insertStmt.setDate(3, (java.sql.Date) like.getCreatedAt());
             insertStmt.executeUpdate();
 
@@ -109,7 +110,7 @@ public class LikesDao {
                Date createdAt = results.getDate("CreatedAt");
 
                Users user = UsersDao.getInstance().getUserByUserName(userName);
-               Song song = SongsDao.getInstance().getSongById(songId);
+               Songs song = SongsDao.getInstance().getSongById(songId);
 
                Likes like = new Likes(likeId, user, song, createdAt);
                return like;

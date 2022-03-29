@@ -1,11 +1,6 @@
 package musicraze.dal;
 
-import musicraze.model.Comments;
-import musicraze.model.Likes;
-import musicraze.model.Persons;
-import musicraze.model.Users;
-
-import javax.swing.plaf.nimbus.State;
+import musicraze.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +106,7 @@ public class CommentsDao {
                 Date createdAt = results.getDate("CreatedAt");
 
                 Users user = UsersDao.getInstance().getUserByUserName(userName);
-                Songs song = SongsDao.getInstance().getSongBySongId(songId);
+                Songs song = SongsDao.getInstance().getSongById(songId);
                 Comments comment = new Comments(commentId, user, song, content, createdAt);
                 return comment;
             }
@@ -211,7 +206,7 @@ public class CommentsDao {
                 Users user = UsersDao.getInstance().getUserByUserName(userName);
                 Songs song = SongsDao.getInstance().getSongById(songId);
 
-                Comments comment = new Likes(likeId, user, song, content, createdAt);
+                Comments comment = new Comments(commentId, user, song, content, createdAt);
                 list.add(comment);
             }
 
