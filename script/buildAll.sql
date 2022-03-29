@@ -101,11 +101,11 @@ CREATE TABLE ArtistEvents (
 CREATE TABLE Songs (
 	SongId  INT AUTO_INCREMENT,
 	SongName  VARCHAR(5000) NOT NULL,
-    SpotifyId VARCHAR(100),
-	   ArtistSpotifyId  VARCHAR(100),
-    ArtistId  INT,
-    AlbumSpotifyId VARCHAR(100),
-    AlbumId INT,
+  SpotifyId VARCHAR(100),
+	ArtistSpotifyId  VARCHAR(100),
+  ArtistId  INT,
+  AlbumSpotifyId VARCHAR(100),
+  AlbumId INT,
  CONSTRAINT pk_Songs_SongId PRIMARY KEY (SongId),   
  CONSTRAINT fk_Songs_ArtistId FOREIGN KEY (ArtistId)    ##??
 	REFERENCES Artists(ArtistId)
