@@ -5,12 +5,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonsDao {
 
   private static final String INSERT =
       "INSERT INTO Persons(UserName,Password,FirstName,LastName,Email) VALUES(?,?,?,?,?);";
-  private static final String SELECT = "SELECT * FROM Persons WHERE UserName=?;";
+  private static final String SELECT_USERNAME = "SELECT * FROM Persons WHERE UserName=?;";
+  private static final String SELECT_FIRSTNAME = "SELECT * FROM Persons WHERE FirstName=?;";
   private static final String DELETE = "DELETE FROM Persons WHERE UserName=?;";
   private static final String UPDATE_PASSWORD = "UPDATE Persons SET Password=? WHERE UserName=?;";
   private static final String UPDATE_FIRSTNAME = "UPDATE Persons SET FirstName=? WHERE UserName=?;";
@@ -62,7 +65,7 @@ public class PersonsDao {
     ResultSet results = null;
     try {
       connection = this.connectionManager.getConnection();
-      selectStmt = connection.prepareStatement(SELECT);
+      selectStmt = connection.prepareStatement(SELECT_USERNAME);
       selectStmt.setString(1, userName);
       results = selectStmt.executeQuery();
       if (results.next()) {
@@ -89,6 +92,40 @@ public class PersonsDao {
     return null;
   }
 
+  public List<Persons> getPersonsByFirstName(String firstName) throws SQLException {
+    List<Persons> persons = new ArrayList<>();
+    Connection connection = null;
+    PreparedStatement selectStmt = null;
+    ResultSet results = null;
+    try {
+      connection = this.connectionManager.getConnection();
+      selectStmt = connection.prepareStatement(SELECT_FIRSTNAME);
+      selectStmt.setString(1, firstName);
+      results = selectStmt.executeQuery();
+      while (results.next()) {
+        String userName = results.getString("UserName");
+        String password = results.getString("Password");
+        String lastName = results.getString("LastName");
+        String email = results.getString("Email");
+        persons.add(new Persons(userName, password, firstName, lastName, email));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
+      if (selectStmt != null) {
+        selectStmt.close();
+      }
+      if (results != null) {
+        results.close();
+      }
+    }
+    return persons;
+  }
+
   public Persons delete(Persons person) throws SQLException {
     Connection connection = null;
     PreparedStatement deleteStmt = null;
@@ -113,7 +150,7 @@ public class PersonsDao {
       }
     }
   }
-  
+
   public Persons updatePassword(Persons person, String newPassword) throws SQLException {
     Connection connection = null;
     PreparedStatement updateStmt = null;
@@ -137,7 +174,7 @@ public class PersonsDao {
       }
     }
   }
-  
+
   public Persons updateFirstName(Persons person, String newFirstName) throws SQLException {
     Connection connection = null;
     PreparedStatement updateStmt = null;
@@ -161,7 +198,7 @@ public class PersonsDao {
       }
     }
   }
-  
+
   public Persons updateLastName(Persons person, String newLastName) throws SQLException {
     Connection connection = null;
     PreparedStatement updateStmt = null;
@@ -185,7 +222,7 @@ public class PersonsDao {
       }
     }
   }
-  
+
   public Persons updateEmail(Persons person, String newEmail) throws SQLException {
     Connection connection = null;
     PreparedStatement updateStmt = null;

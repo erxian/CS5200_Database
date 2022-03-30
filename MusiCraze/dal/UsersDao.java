@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class UsersDao extends PersonsDao {
 
@@ -91,6 +93,15 @@ public class UsersDao extends PersonsDao {
       }
     }
     return null;
+  }
+
+  public List<Users> getUsersByFirstName(String firstName) throws SQLException {
+    List<Persons> persons = super.getPersonsByFirstName(firstName);
+    List<Users> users = new ArrayList<>();
+    for (Persons person : persons) {
+      users.add(this.getUserByUserName(person.getUserName()));
+    }
+    return users;
   }
 
   public Users delete(Users user) throws SQLException {

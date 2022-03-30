@@ -5,6 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdministratorsDao extends PersonsDao {
 
@@ -75,6 +77,15 @@ public class AdministratorsDao extends PersonsDao {
       }
     }
     return null;
+  }
+
+  public List<Administrators> getAdministratorsByFirstName(String firstName) throws SQLException {
+    List<Persons> persons = super.getPersonsByFirstName(firstName);
+    List<Administrators> administrators = new ArrayList<>();
+    for (Persons person : persons) {
+      administrators.add(this.getAdministratorByUserName(person.getUserName()));
+    }
+    return administrators;
   }
 
   public Administrators delete(Administrators administrator) throws SQLException {

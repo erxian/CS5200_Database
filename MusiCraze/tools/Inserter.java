@@ -22,6 +22,9 @@ public class Inserter {
     // Test PersonsDao.getPersonByUserName()
     assertNotNull(personsDao.getPersonByUserName("UserName1"));
 
+    // Test PersonsDao.getPersonsByFirstName()
+    assertFalse(personsDao.getPersonsByFirstName("FirstName1").isEmpty());
+
     // Test PersonsDao.updatePassword()
     person1 = personsDao.updatePassword(person1, "newPassword");
     assertEquals("newPassword", personsDao.getPersonByUserName("UserName1").getPassword());
@@ -50,6 +53,9 @@ public class Inserter {
 
     // Test UsersDao.getUserByUserName()
     assertNotNull(usersDao.getUserByUserName("UserName2"));
+
+    // Test UsersDao.getUsersByFirstName()
+    assertFalse(usersDao.getUsersByFirstName("FirstName2").isEmpty());
 
     // Test UsersDao.updatePassword()
     user2 = usersDao.updatePassword(user2, "newPassword");
@@ -90,6 +96,9 @@ public class Inserter {
 
     // Test AdministratorsDao.getAdministratorByUserName()
     assertNotNull(administratorsDao.getAdministratorByUserName("UserName3"));
+
+    // Test AdministratorsDao.getAdministratorsByFirstName()
+    assertFalse(administratorsDao.getAdministratorsByFirstName("FirstName3").isEmpty());
 
     // Test AdministratorsDao.updatePassword()
     administrator3 = administratorsDao.updatePassword(administrator3, "newPassword");
