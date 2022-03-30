@@ -1,7 +1,6 @@
 package musicraze.dal;
 
-import musicraze.model.Covers;
-import musicraze.model.Songs;
+import musicraze.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,21 +9,16 @@ public class CoversDao {
   protected ConnectionManager connectionManager;
   private static CoversDao instance = null;
 
-  private static final String INSERT =
-      "INSERT INTO Covers(CoverName, PerformerName, YoutubeUrl, SongId) " +
-          "VALUES(?,?,?,?);";
-  private static final String GET_BY_COVER_ID =
-      "SELECT * FROM Covers WHERE CoverId = ?;";
-  private static final String GET_BY_COVER_NAME =
-      "SELECT * FROM Covers WHERE CoverName = ?;";
-  private static final String GET_BY_PERFORMER_NAME =
-      "SELECT * FROM Covers WHERE PerformerName = ?;";
-  private static final String GET_BY_YOUTUBE_URL =
-      "SELECT * FROM Covers WHERE YoutubeUrl = ?;";
-  private static final String GET_BY_SONG_ID =
-      "SELECT * FROM Covers INNER JOIN Songs ON Covers.SongId = Songs.SongId WHERE Songs.SongId = ?;";
-  private static final String DELETE =
-      "DELETE FROM Covers WHERE CoverId = ?;";
+  private static final String INSERT = "INSERT INTO Covers(CoverName, PerformerName, YoutubeUrl, SongId) VALUES(?,?,?,?);";
+  private static final String GET_BY_COVER_ID = "SELECT * FROM Covers WHERE CoverId = ?;";
+  private static final String GET_BY_COVER_NAME = "SELECT * FROM Covers WHERE CoverName = ?;";
+  private static final String GET_BY_PERFORMER_NAME = "SELECT * FROM Covers WHERE PerformerName = ?;";
+  private static final String GET_BY_YOUTUBE_URL = "SELECT * FROM Covers WHERE YoutubeUrl = ?;";
+  private static final String GET_BY_SONG_ID = "SELECT * FROM Covers INNER JOIN Songs ON Covers.SongId = Songs.SongId WHERE Songs.SongId = ?;";
+  private static final String UPDATE_COVER_NAME = "UPDATE Covers SET CoverName = ? WHERE CoverId = ?;";
+  private static final String UPDATE_PERFORMER_NAME = "UPDATE Covers SET PerformerName = ? WHERE CoverId = ?;";
+  private static final String UPDATE_YOUTUBE_URL = "UPDATE Covers SET YoutubeUrl = ? WHERE CoverId = ?;";
+  private static final String DELETE = "DELETE FROM Covers WHERE CoverId = ?;";
 
   protected CoversDao() {
     this.connectionManager = new ConnectionManager();
@@ -164,7 +158,7 @@ public class CoversDao {
 
     try {
       connection = this.connectionManager.getConnection();
-      selectStmt = connection.prepareStatement(GET_BY_COVER_NAME);
+      selectStmt = connection.prepareStatement(GET_BY_PERFORMER_NAME);
       selectStmt.setString(1, performerName);
       results = selectStmt.executeQuery();
 
@@ -277,6 +271,78 @@ public class CoversDao {
       }
     }
     return list;
+  }
+
+  public Covers updateCoverName(Covers cover, String coverName) throws SQLException {
+    Connection connection = null;
+    PreparedStatement insertStmt = null;
+    try {
+      connection = connectionManager.getConnection();
+      insertStmt = connection.prepareStatement(UPDATE_COVER_NAME);
+      insertStmt.setString(1, coverName);
+      insertStmt.setInt(2, cover.getCoverId());
+      insertStmt.executeUpdate();
+      cover.setCoverName(coverName);
+      return cover;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
+      if (insertStmt != null) {
+        insertStmt.close();
+      }
+    }
+  }
+
+  public Covers updatePerformerName(Covers cover, String performerName) throws SQLException {
+    Connection connection = null;
+    PreparedStatement insertStmt = null;
+    try {
+      connection = connectionManager.getConnection();
+      insertStmt = connection.prepareStatement(UPDATE_PERFORMER_NAME);
+      insertStmt.setString(1, performerName);
+      insertStmt.setInt(2, cover.getCoverId());
+      insertStmt.executeUpdate();
+      cover.setPerformerName(performerName);
+      return cover;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
+      if (insertStmt != null) {
+        insertStmt.close();
+      }
+    }
+  }
+
+  public Covers updateYoutubeUrl(Covers cover, String youtubeUrl) throws SQLException {
+    Connection connection = null;
+    PreparedStatement insertStmt = null;
+    try {
+      connection = connectionManager.getConnection();
+      insertStmt = connection.prepareStatement(UPDATE_YOUTUBE_URL);
+      insertStmt.setString(1, youtubeUrl);
+      insertStmt.setInt(2, cover.getCoverId());
+      insertStmt.executeUpdate();
+      cover.setYoutubeUrl(youtubeUrl);
+      return cover;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      if (connection != null) {
+        connection.close();
+      }
+      if (insertStmt != null) {
+        insertStmt.close();
+      }
+    }
   }
 
   public Covers delete(Covers cover) throws SQLException{
