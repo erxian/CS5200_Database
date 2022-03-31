@@ -26,6 +26,14 @@ public class Artists {
     this.artistCountry = artistCountry;
     this.artistRecordLabel = artistRecordLabel;
   }
+  
+  public Artists(String artistName, String artistSpotifyId,
+      String artistCountry, String artistRecordLabel) {
+    this.artistName = artistName;
+    this.artistSpotifyId = artistSpotifyId;
+    this.artistCountry = artistCountry;
+    this.artistRecordLabel = artistRecordLabel;
+  }
 
   public int getArtistId() {
     return artistId;

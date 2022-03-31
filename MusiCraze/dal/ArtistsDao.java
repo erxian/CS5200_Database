@@ -5,13 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import musicraze.model.Artists;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ArtistsDao {
   protected ConnectionManager connectionManager;
   private static ArtistsDao instance = null;
 
   private static final String INSERT = "INSERT INTO Artists(ArtistName, ArtistSpotifyId, ArtistCountry, ArtistRecordLabel) VALUES(?,?,?,?);";
-  private static final String GETBYARTISTID = "SELECT * FROM Artists WHERE ArtistsId = ?;";
+  private static final String GETBYARTISTID = "SELECT * FROM Artists WHERE ArtistId = ?;";
+  private static final String GETBYARTISTNAME = "SELECT * FROM Artists WHERE ArtistName = ?;";
   private static final String DELETE = "DELETE FROM Artists WHERE ArtistId = ?;";
   private static final String UPDATE_ARTISTNAME = "UPDATE Artists SET ArtistName = ? WHERE ArtistId = ?;";
   private static final String UPDATE_ARTISTCOUNTRY = "UPDATE Artists SET ArtistCountry = ? WHERE ArtistId = ?;";
@@ -37,14 +41,14 @@ public class ArtistsDao {
     ResultSet resultKey = null;
     try {
       connection = connectionManager.getConnection();
-      insertStmt = connection.prepareStatement(INSERT);
+      insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
       insertStmt.setString(1, artists.getArtistName());
       insertStmt.setString(2, artists.getArtistSpotifyId());
       insertStmt.setString(3, artists.getArtistCountry());
       insertStmt.setString(4, artists.getArtistRecordLabel());
 
-      resultKey = insertStmt.getGeneratedKeys();
       insertStmt.executeUpdate();
+      resultKey = insertStmt.getGeneratedKeys();
 
       int artistId = -1;
       if (resultKey.next()) {
@@ -105,6 +109,45 @@ public class ArtistsDao {
     }
     return null;
   }
+  
+  
+  public List<Artists> getArtistByName(String artistName) throws SQLException {
+	  	List<Artists> artists = new ArrayList<Artists>();
+	    Connection connection = null;
+	    PreparedStatement selectStmt = null;
+	    ResultSet results = null;
+	    try {
+	      connection = this.connectionManager.getConnection();
+	      selectStmt = connection.prepareStatement(GETBYARTISTNAME);
+	      selectStmt.setString(1, artistName);
+	      results = selectStmt.executeQuery();
+	      while (results.next()) {
+	        Integer artistid = results.getInt("ArtistId");
+	        String artistname = results.getString("ArtistName");
+	        String artistSpotifyId = results.getString("ArtistSpotifyId");
+	        String artistCountry = results.getString("ArtistCountry");
+	        String artistRecordLabel = results.getString("ArtistRecordLabel");
+	        	
+	        Artists artist = new Artists(artistid, artistname, artistSpotifyId, artistCountry, artistRecordLabel);
+	        artists.add(artist);
+	      }
+	    } catch (SQLException e) {
+	      e.printStackTrace();
+	      throw e;
+	    } finally {
+	      if (connection != null) {
+	        connection.close();
+	      }
+	      if (selectStmt != null) {
+	        selectStmt.close();
+	      }
+	      if (results != null) {
+	        results.close();
+	      }
+	    }
+	    return artists;
+	  }
+  
 
   public Artists updateArtistName(Artists artists, String artistName) throws SQLException {
     Connection connection = null;
