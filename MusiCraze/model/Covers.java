@@ -1,76 +1,77 @@
 package musicraze.model;
 
 public class Covers {
-  Integer CoverId;
-  String CoverName;
-  String PerformerName;
-  String YoutubeUrl;
-  Integer SongId;
+  Integer coverId;
+  String coverName;
+  String performerName;
+  String youtubeUrl;
+  Songs song;
 
   public Covers(Integer coverId, String coverName, String performerName, String youtubeUrl,
-      Integer songId) {
-    CoverId = coverId;
-    CoverName = coverName;
-    PerformerName = performerName;
-    YoutubeUrl = youtubeUrl;
-    SongId = songId;
+      Songs song) {
+    this.coverId = coverId;
+    this.coverName = coverName;
+    this.performerName = performerName;
+    this.youtubeUrl = youtubeUrl;
+    this.song = song;
   }
 
-  public Covers(String coverName, String performerName, String youtubeUrl, Integer songId) {
-    CoverName = coverName;
-    PerformerName = performerName;
-    YoutubeUrl = youtubeUrl;
-    SongId = songId;
+  public Covers(String coverName, String performerName, String youtubeUrl, Songs song) {
+    this.coverName = coverName;
+    this.performerName = performerName;
+    this.youtubeUrl = youtubeUrl;
+    this.song = song;
   }
+
 
   public Integer getCoverId() {
-    return CoverId;
+	return coverId;
   }
+	
+	public void setCoverId(Integer coverId) {
+		this.coverId = coverId;
+	}
+	
+	public String getCoverName() {
+		return coverName;
+	}
+	
+	public void setCoverName(String coverName) {
+		this.coverName = coverName;
+	}
+	
+	public String getPerformerName() {
+		return performerName;
+	}
+	
+	public void setPerformerName(String performerName) {
+		this.performerName = performerName;
+	}
+	
+	public String getYoutubeUrl() {
+		return youtubeUrl;
+	}
+	
+	public void setYoutubeUrl(String youtubeUrl) {
+		this.youtubeUrl = youtubeUrl;
+	}
+	
+	public Songs getSong() {
+		return song;
+	}
+	
+	public void setSong(Songs song) {
+		this.song = song;
+	}
 
-  public void setCoverId(Integer coverId) {
-    CoverId = coverId;
-  }
-
-  public String getCoverName() {
-    return CoverName;
-  }
-
-  public void setCoverName(String coverName) {
-    CoverName = coverName;
-  }
-
-  public String getPerformerName() {
-    return PerformerName;
-  }
-
-  public void setPerformerName(String performerName) {
-    PerformerName = performerName;
-  }
-
-  public String getYoutubeUrl() {
-    return YoutubeUrl;
-  }
-
-  public void setYoutubeUrl(String youtubeUrl) {
-    YoutubeUrl = youtubeUrl;
-  }
-
-  public Integer getSongId() {
-    return SongId;
-  }
-
-  public void setSongId(Integer songId) {
-    SongId = songId;
-  }
-
-  @Override
+@Override
   public String toString() {
     return "Covers{" +
-        "CoverId=" + CoverId +
-        ", CoverName='" + CoverName + '\'' +
-        ", PerformerName='" + PerformerName + '\'' +
-        ", YoutubeUrl='" + YoutubeUrl + '\'' +
-        ", SongId=" + SongId +
+        "CoverId=" + this.coverId +
+        ", CoverName='" + this.coverName + '\'' +
+        ", PerformerName='" + this.performerName + '\'' +
+        ", YoutubeUrl='" + this.youtubeUrl + '\'' +
+        ", SongId=" + this.song.getSongId() +
         '}';
   }
 }

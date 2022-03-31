@@ -40,7 +40,7 @@ public class CoversDao {
       insertStmt.setString(1, cover.getCoverName());
       insertStmt.setString(2, cover.getPerformerName());
       insertStmt.setString(3, cover.getYoutubeUrl());
-      insertStmt.setInt(4, cover.getSongId());
+      insertStmt.setInt(4, cover.getSong().getSongId());
       insertStmt.executeUpdate();
 
       resultKey = insertStmt.getGeneratedKeys();
@@ -88,7 +88,7 @@ public class CoversDao {
 
         Songs song = SongsDao.getInstance().getSongById(songId);
 
-        Covers cover = new Covers(resultCoverId, coverName, performerName, youtubeUrl, songId);
+        Covers cover = new Covers(resultCoverId, coverName, performerName, youtubeUrl, song);
         return cover;
       }
     } catch (SQLException e) {
@@ -129,7 +129,7 @@ public class CoversDao {
 
         Songs song = SongsDao.getInstance().getSongById(songId);
 
-        Covers cover = new Covers(coverId, resultCoverName, performerName, youtubeUrl, songId);
+        Covers cover = new Covers(coverId, resultCoverName, performerName, youtubeUrl, song);
         list.add(cover);
       }
 
@@ -171,7 +171,7 @@ public class CoversDao {
 
         Songs song = SongsDao.getInstance().getSongById(songId);
 
-        Covers cover = new Covers(coverId, coverName, resultPerformerName, youtubeUrl, songId);
+        Covers cover = new Covers(coverId, coverName, resultPerformerName, youtubeUrl, song);
         list.add(cover);
       }
 
@@ -211,7 +211,7 @@ public class CoversDao {
 
         Songs song = SongsDao.getInstance().getSongById(songId);
 
-        Covers cover = new Covers(coverId, coverName, performerName, resultYoutubeUrl, songId);
+        Covers cover = new Covers(coverId, coverName, performerName, resultYoutubeUrl, song);
         return cover;
       }
     } catch (SQLException e) {
@@ -252,7 +252,7 @@ public class CoversDao {
 
         Songs song = SongsDao.getInstance().getSongById(resultSongId);
 
-        Covers cover = new Covers(coverId, coverName, performerName, youtubeUrl, resultSongId);
+        Covers cover = new Covers(coverId, coverName, performerName, youtubeUrl, song);
         list.add(cover);
       }
 
