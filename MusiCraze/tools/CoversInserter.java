@@ -11,13 +11,6 @@ public class LikesCommentsInserter  {
     SongsDao songsDao = SongsDao.getInstance();
     CoversDao coversDao = CoversDao.getInstance();
 
-    Date bornDateForLike = new SimpleDateFormat("yyyy-MM-dd").parse("1985-12-05");
-    Instant joinDateForLike = Instant.parse("2022-03-27T12:30:00Z");
-    Users userForLikesComments1 = usersDao.create(new Users("UserNameTestForLikes1", "Password2", "FirstName2", "LastName2",
-        "Email2", "Avatar2", "Bio2", bornDateForLike, joinDateForLike));
-    Users userForLikesComments2 = usersDao.create(new Users("UserNameTestForLikes2", "Password2", "FirstName2", "LastName2",
-        "Email2", "Avatar2", "Bio2", bornDateForLike, joinDateForLike));
-
     Songs songForCovers1 = songsDao.create(new Songs("songForCovers1", 12345, 2343));
     Songs songForCovers2 = songsDao.create(new Songs("songForCovers2", 12345, 2343));
 
