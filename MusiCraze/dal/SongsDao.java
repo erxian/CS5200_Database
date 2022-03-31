@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class SongsDao {
     private static SongsDao instance = null;
 
     private static final String INSERT = "INSERT INTO Songs(SongName, ArtistId, AlbumId) VALUES(?,?,?);";
-    private static final String GETBYSONGID = "SELECT * FROM Songs WHERE SongsId = ?;";
+    private static final String GETBYSONGID = "SELECT * FROM Songs INNER JOIN Artists ON Songs.artistId = Artists.artistId WHERE SongId = ?;";
     private static final String DELETE = "DELETE FROM Songs WHERE SongId = ?;";
     private static final String UPDATE_SONGNAME = "UPDATE Songs SET SongName = ? WHERE SongId = ?;";
     private static final String UPDATE_ARTISTID = "UPDATE Songs SET ArtistId = ? WHERE SongId = ?;";
@@ -36,13 +37,13 @@ public class SongsDao {
         ResultSet resultKey = null;
         try {
             connection = connectionManager.getConnection();
-            insertStmt = connection.prepareStatement(INSERT);
+            insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             insertStmt.setString(1, songs.getSongName());
             insertStmt.setInt(2, songs.getArtistId());
             insertStmt.setInt(3, songs.getAlbumId());
-            resultKey = insertStmt.getGeneratedKeys();
             insertStmt.executeUpdate();
 
+            resultKey = insertStmt.getGeneratedKeys();
             int songId = -1;
             if (resultKey.next()) {
                 songId = resultKey.getInt(1);
@@ -82,7 +83,13 @@ public class SongsDao {
                 String songName = results.getString("SongName");
                 Integer artistId = results.getInt("ArtistId");
                 Integer albumId = results.getInt("AlbumId");
-                return new Songs(resultId, songName, artistId, albumId);
+                String artistName = results.getString("ArtistName");
+                String artistSpotifyId = results.getString("ArtistSpotifyId");
+                String artistCountry = results.getString("ArtistCountry");
+                String artistRecordLabel = results.getString("ArtistRecordLabel");
+                Songs result = new Songs(resultId, songName, artistId, albumId);
+                result.setArtist(new Artists(artistId, artistName, artistSpotifyId, artistCountry, artistRecordLabel));
+                return result;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,7 +166,6 @@ public class SongsDao {
             insertStmt.setInt(2, songs.getSongId());
             insertStmt.executeUpdate();
             songs.setArtistId(artistId);
-            ;
             return songs;
         } catch (SQLException e) {
             e.printStackTrace();

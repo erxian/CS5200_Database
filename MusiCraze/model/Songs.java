@@ -5,6 +5,7 @@ public class Songs {
     String songName;
     Integer artistId;
     Integer albumId;
+    Artists artist;
 
     public Songs(Integer songId, String songName, Integer artistId, Integer albumId) {
         SongId = songId;
@@ -49,6 +50,14 @@ public class Songs {
 
     public void setAlbumId(Integer albumId) {
         this.albumId = albumId;
+    }
+
+    public Artists getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Artists artist) {
+        this.artist = artist;
     }
 
 }

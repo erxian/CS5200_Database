@@ -250,7 +250,7 @@ public class CoversDao {
         String youtubeUrl = results.getString("YoutubeUrl");
         int resultSongId = results.getInt("SongId");
 
-        Songs song = SongsDao.getInstance().getSongById(songId);
+        Songs song = SongsDao.getInstance().getSongById(resultSongId);
 
         Covers cover = new Covers(coverId, coverName, performerName, youtubeUrl, resultSongId);
         list.add(cover);
