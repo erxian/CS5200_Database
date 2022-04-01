@@ -85,7 +85,47 @@ public class AlbumsDao {
 		    }
 	 }
 		  
-
+	  public Albums getAlbumById(int albumId) throws SQLException {
+		  String selectAlbum = "SELECT * " +
+					"From Albums " +
+				    "WHERE AlbumId=?";
+		Connection connection = null;
+		PreparedStatement selectStmt = null;
+		ResultSet results = null;
+		try {
+			connection = connectionManager.getConnection();
+			selectStmt = connection.prepareStatement(selectAlbum);
+			selectStmt.setInt(1, albumId);
+			results = selectStmt.executeQuery();
+			
+			
+			if (results.next()) {
+				String albumName = results.getString("Name");
+				String albumSpotifyId = results.getString("AlbumSpotifyId");
+				int year = results.getInt("Year");
+				Date releaseDate = new Date(results.getTimestamp("ReleaseDate").getTime());
+				int duration = results.getInt("Duration");
+				Albums album = new Albums(albumId, albumSpotifyId, albumName, year,
+			      releaseDate, duration);
+				
+				return album;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if(connection != null) {
+				connection.close();
+			}
+			if(selectStmt != null) {
+				selectStmt.close();
+			}
+			if(results != null) {
+				results.close();
+			}
+		}
+		return null;
+	  }
 	  
 	  public List<Albums> getAlbumsFromAlbumName(String albumName)
 				throws SQLException {

@@ -3,61 +3,52 @@ package musicraze.model;
 public class Songs {
     Integer SongId;
     String songName;
-    Integer artistId;
-    Integer albumId;
     Artists artist;
+    Albums album;
 
-    public Songs(Integer songId, String songName, Integer artistId, Integer albumId) {
+    public Songs(Integer songId, String songName, Artists artist, Albums album) {
         SongId = songId;
         this.songName = songName;
-        this.artistId = artistId;
-        this.albumId = albumId;
-    }
-
-    public Songs(String songName, Integer artistId, Integer albumId) {
-        this.songName = songName;
-        this.artistId = artistId;
-        this.albumId = albumId;
-    }
-
-    public Integer getSongId() {
-        return SongId;
-    }
-
-    public void setSongId(Integer songId) {
-        SongId = songId;
-    }
-
-    public String getSongName() {
-        return songName;
-    }
-
-    public void setSongName(String songName) {
-        this.songName = songName;
-    }
-
-    public Integer getArtistId() {
-        return artistId;
-    }
-
-    public void setArtistId(Integer artistId) {
-        this.artistId = artistId;
-    }
-
-    public Integer getAlbumId() {
-        return albumId;
-    }
-
-    public void setAlbumId(Integer albumId) {
-        this.albumId = albumId;
-    }
-
-    public Artists getArtist() {
-        return artist;
-    }
-
-    public void setArtist(Artists artist) {
         this.artist = artist;
+        this.album = album;
     }
+
+    public Songs(String songName, Artists artist, Albums album) {
+        this.songName = songName;
+        this.artist = artist;
+        this.album = album;
+    }
+
+	public Integer getSongId() {
+		return SongId;
+	}
+
+	public void setSongId(Integer songId) {
+		SongId = songId;
+	}
+
+	public String getSongName() {
+		return songName;
+	}
+
+	public void setSongName(String songName) {
+		this.songName = songName;
+	}
+
+	public Artists getArtist() {
+		return artist;
+	}
+
+	public void setArtist(Artists artist) {
+		this.artist = artist;
+	}
+
+	public Albums getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(Albums album) {
+		this.album = album;
+	}
 
 }

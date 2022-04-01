@@ -1,10 +1,6 @@
 package musicraze.tools;
 
 
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 import musicraze.dal.*;
@@ -49,8 +45,8 @@ public class PlaylistsInserter {
 		
 		// Test whether updating a playlist's name/description would update the playlist's UpdatedAt field.
 		// Update playlist3:
-//		playlistsDao.updatePlaylistName(playlistsDao.getPlaylistById(134), "RoadTrip Music");
-//		playlistsDao.updateDescription(playlistsDao.getPlaylistById(134), "Some good music for road trip!!");
+		//		playlistsDao.updatePlaylistName(playlistsDao.getPlaylistById(134), "RoadTrip Music");
+		//		playlistsDao.updateDescription(playlistsDao.getPlaylistById(134), "Some good music for road trip!!");
 		
 	    
 		 // Get playlists for userZwill: (Should have playlist1, playlist2, playlist3)
@@ -95,60 +91,60 @@ public class PlaylistsInserter {
 		
  	    // Test whether adding a song to a playlist would update the playlist's UpdatedAt field.
  	    // User2 Adds song11, song12 to playlist1
-// 	    Songs song11 = songsDao.getSongById(11);
-// 	    PlaylistSongContains contain1 = new PlaylistSongContains(playlistsDao.getPlaylistById(132), song11);
-// 	    contain1 =  containsDao.create(contain1);
-// 	    
-// 	    Songs song12 = songsDao.getSongById(12);
-// 	    PlaylistSongContains contain2 = new PlaylistSongContains(playlistsDao.getPlaylistById(132), song12);
-// 	    contain2 =  containsDao.create(contain2);
-// 	    
-// 	    
-// 	    // User2 Adds song11, song13 to playlist2
-// 	    PlaylistSongContains contain3 = new PlaylistSongContains(playlistsDao.getPlaylistById(133), song11);
-//	    contain3 =  containsDao.create(contain3);
-//	    
-// 	    Songs song13 = songsDao.getSongById(13);
-// 	    PlaylistSongContains contain4 = new PlaylistSongContains(playlistsDao.getPlaylistById(133), song13);
-// 	    contain4 =  containsDao.create(contain4);
+		// 	    Songs song11 = songsDao.getSongById(11);
+		// 	    PlaylistSongContains contain1 = new PlaylistSongContains(playlistsDao.getPlaylistById(132), song11);
+		// 	    contain1 =  containsDao.create(contain1);
+		// 	    
+		// 	    Songs song12 = songsDao.getSongById(12);
+		// 	    PlaylistSongContains contain2 = new PlaylistSongContains(playlistsDao.getPlaylistById(132), song12);
+		// 	    contain2 =  containsDao.create(contain2);
+		// 	    
+		// 	    
+		// 	    // User2 Adds song11, song13 to playlist2
+		// 	    PlaylistSongContains contain3 = new PlaylistSongContains(playlistsDao.getPlaylistById(133), song11);
+		//	    contain3 =  containsDao.create(contain3);
+		//	    
+		// 	    Songs song13 = songsDao.getSongById(13);
+		// 	    PlaylistSongContains contain4 = new PlaylistSongContains(playlistsDao.getPlaylistById(133), song13);
+		// 	    contain4 =  containsDao.create(contain4);
  	    
  	    
  	    // Get all songs for playlist1 (should contain song11 & song12)
- 	   List<PlaylistSongContains> listOfContains1 = containsDao.getSongsForPlaylist(playlist1);
- 	   for(PlaylistSongContains c : listOfContains1) {
+ 	    List<PlaylistSongContains> listOfContains1 = containsDao.getSongsForPlaylist(playlist1);
+ 	    for(PlaylistSongContains c : listOfContains1) {
  		  System.out.format("Get Songs For Playlist: playlistId:%s playlistName:%s songId:%s songName:%s\n",
  		    c.getPlaylist().getPlaylistId(), c.getPlaylist().getPlaylistName(),
  		    c.getSong().getSongId(), c.getSong().getSongName());
- 	   }
+ 	    }
  	    
  	   
 	    // Get all songs for playlist2 (should contain song11 & song13)
-	   List<PlaylistSongContains> listOfContains2 = containsDao.getSongsForPlaylist(playlist2);
-	   for(PlaylistSongContains c : listOfContains2) {
+	    List<PlaylistSongContains> listOfContains2 = containsDao.getSongsForPlaylist(playlist2);
+	    for(PlaylistSongContains c : listOfContains2) {
 		  System.out.format("Get Songs For Playlist: playlistId:%s playlistName:%s songId:%s songName:%s\n",
 		    c.getPlaylist().getPlaylistId(), c.getPlaylist().getPlaylistName(),
 		    c.getSong().getSongId(), c.getSong().getSongName());
-	   }
+	    }
  	   
  	    // Deletes song11 from playlist2
  	    containsDao.delete(contain3);
  	    System.out.format("Song11 deleted from playlist2.\n");
  	    
  	    
- 	   //  Test whether deleting a song from a playlist would update the playlist's UpdatedAt field.
- 	   // Deletes song11 from playlist2
-// 	    containsDao.delete(containsDao.getContainById(1003));
-// 	    System.out.format("Song11 deleted from playlist2.\n");
+ 	    //  Test whether deleting a song from a playlist would update the playlist's UpdatedAt field.
+ 	    // Deletes song11 from playlist2
+	    // 	    containsDao.delete(containsDao.getContainById(1003));
+	    // 	    System.out.format("Song11 deleted from playlist2.\n");
 
 
  	    
  	    // Get all songs for playlist2 (NOTE: should ONLY contain song13)
- 	   List<PlaylistSongContains> listOfContains3 = containsDao.getSongsForPlaylist(playlist2);
- 	   for(PlaylistSongContains c : listOfContains3) {
+ 	    List<PlaylistSongContains> listOfContains3 = containsDao.getSongsForPlaylist(playlist2);
+ 	    for(PlaylistSongContains c : listOfContains3) {
  		  System.out.format("Get Songs For Playlist: playlistId:%s playlistName:%s songId:%s songName:%s\n",
  		    c.getPlaylist().getPlaylistId(), c.getPlaylist().getPlaylistName(),
  		    c.getSong().getSongId(), c.getSong().getSongName());
- 	   }
+ 	    }
  	    
  	    // Deletes playlist4
 		playlistsDao.delete(playlist4);

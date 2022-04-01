@@ -1,9 +1,13 @@
 package musicraze.tools;
 
+import musicraze.dal.AlbumsDao;
+import musicraze.dal.ArtistsDao;
 import musicraze.dal.CommentsDao;
 import musicraze.dal.LikesDao;
 import musicraze.dal.SongsDao;
 import musicraze.dal.UsersDao;
+import musicraze.model.Albums;
+import musicraze.model.Artists;
 import musicraze.model.Comments;
 import musicraze.model.Likes;
 import musicraze.model.Songs;
@@ -21,7 +25,8 @@ public class LikesCommentsInserter  {
         SongsDao songsDao = SongsDao.getInstance();
         LikesDao likesDao = LikesDao.getInstance();
         CommentsDao commentsDao = CommentsDao.getInstance();
-
+        AlbumsDao albumsDao = AlbumsDao.getInstance();
+        ArtistsDao artistsDao = ArtistsDao.getInstance();
 
         // Test UsersDao.create()
         Date bornDateForLike = new SimpleDateFormat("yyyy-MM-dd").parse("1985-12-05");
@@ -31,8 +36,12 @@ public class LikesCommentsInserter  {
         Users userForLikesComments2 = usersDao.create(new Users("UserNameTestForLikes2", "Password2", "FirstName2", "LastName2",
                 "Email2", "Avatar2", "Bio2", bornDateForLike, joinDateForLike));
 
-        Songs songForLikesComments1 = songsDao.create(new Songs("songTestForLike1", 12345, 2343));
-        Songs songForLikesComments2 = songsDao.create(new Songs("songTestForLike2", 12345, 2343));
+        Albums album1 = albumsDao.getAlbumById(1);
+        Artists artist1 = artistsDao.getArtistById(1);
+        
+        
+        Songs songForLikesComments1 = songsDao.create(new Songs("songTestForLike1", artist1, album1));
+        Songs songForLikesComments2 = songsDao.create(new Songs("songTestForLike2", artist1, album1));
 
 
         /****************TEST FOR LikesDao*******************/

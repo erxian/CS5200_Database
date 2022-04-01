@@ -39,8 +39,8 @@ public class SongsDao {
             connection = connectionManager.getConnection();
             insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             insertStmt.setString(1, songs.getSongName());
-            insertStmt.setInt(2, songs.getArtistId());
-            insertStmt.setInt(3, songs.getAlbumId());
+            insertStmt.setInt(2, songs.getArtist().getArtistId());
+            insertStmt.setInt(3, songs.getAlbum().getAlbumId());
             insertStmt.executeUpdate();
 
             resultKey = insertStmt.getGeneratedKeys();
@@ -87,9 +87,14 @@ public class SongsDao {
                 String artistSpotifyId = results.getString("ArtistSpotifyId");
                 String artistCountry = results.getString("ArtistCountry");
                 String artistRecordLabel = results.getString("ArtistRecordLabel");
-                Songs result = new Songs(resultId, songName, artistId, albumId);
-                result.setArtist(new Artists(artistId, artistName, artistSpotifyId, artistCountry, artistRecordLabel));
-                return result;
+
+                Artists artist = new Artists(artistId, artistName, artistSpotifyId, artistCountry, artistRecordLabel);
+                AlbumsDao albumsDao = AlbumsDao.getInstance();
+                Albums album = albumsDao.getAlbumById(albumId);
+                
+                Songs song = new Songs(resultId, songName, artist, album);
+                
+                return song;
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -132,62 +137,68 @@ public class SongsDao {
         }
     }
 
-    public Songs updateAlbumId(Songs songs, Integer albumId) throws SQLException {
-        Connection connection = null;
-        PreparedStatement insertStmt = null;
-        try {
-            connection = connectionManager.getConnection();
-            insertStmt = connection.prepareStatement(UPDATE_ALBUMID);
-            insertStmt.setInt(1, albumId);
-            insertStmt.setInt(2, songs.getSongId());
-            insertStmt.executeUpdate();
-            songs.setAlbumId(albumId);
-            return songs;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
-            if (insertStmt != null) {
-                insertStmt.close();
-            }
-        }
-    }
-
-    public Songs updateArtistId(Songs songs, Integer artistId) throws SQLException {
-        Connection connection = null;
-        PreparedStatement insertStmt = null;
-        try {
-            connection = connectionManager.getConnection();
-            insertStmt = connection.prepareStatement(UPDATE_ARTISTID);
-            insertStmt.setInt(1, artistId);
-            insertStmt.setInt(2, songs.getSongId());
-            insertStmt.executeUpdate();
-            songs.setArtistId(artistId);
-            return songs;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw e;
-        } finally {
-            if (connection != null) {
-                connection.close();
-            }
-            if (insertStmt != null) {
-                insertStmt.close();
-            }
-        }
-    }
+    // Update methods not used at Front-end.
+    // Also, not sure if a method for updating Foreign Key should
+    // take in a new Id, or a new object.
+    
+//    public Songs updateAlbumId(Songs songs, Integer albumId) throws SQLException {
+//        Connection connection = null;
+//        PreparedStatement insertStmt = null;
+//        try {
+//            connection = connectionManager.getConnection();
+//            insertStmt = connection.prepareStatement(UPDATE_ALBUMID);
+//            insertStmt.setInt(1, albumId);
+//            insertStmt.setInt(2, songs.getSongId());
+//            insertStmt.executeUpdate();
+//            
+//            
+//            songs.setAlbumId(albumId);
+//            return songs;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw e;
+//        } finally {
+//            if (connection != null) {
+//                connection.close();
+//            }
+//            if (insertStmt != null) {
+//                insertStmt.close();
+//            }
+//        }
+//    }
+//
+//    public Songs updateArtistId(Songs songs, Integer artistId) throws SQLException {
+//        Connection connection = null;
+//        PreparedStatement insertStmt = null;
+//        try {
+//            connection = connectionManager.getConnection();
+//            insertStmt = connection.prepareStatement(UPDATE_ARTISTID);
+//            insertStmt.setInt(1, artistId);
+//            insertStmt.setInt(2, songs.getSongId());
+//            insertStmt.executeUpdate();
+//            songs.setArtistId(artistId);
+//            return songs;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            throw e;
+//        } finally {
+//            if (connection != null) {
+//                connection.close();
+//            }
+//            if (insertStmt != null) {
+//                insertStmt.close();
+//            }
+//        }
+//    }
 
     public Songs delete(Songs songs) throws SQLException {
         Connection connection = null;
-        PreparedStatement insertStmt = null;
+        PreparedStatement deleteStmt = null;
         try {
             connection = connectionManager.getConnection();
-            insertStmt = connection.prepareStatement(DELETE);
-            insertStmt.setInt(1, songs.getSongId());
-            insertStmt.executeUpdate();
+            deleteStmt = connection.prepareStatement(DELETE);
+            deleteStmt.setInt(1, songs.getSongId());
+            deleteStmt.executeUpdate();
             return null;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -196,8 +207,8 @@ public class SongsDao {
             if (connection != null) {
                 connection.close();
             }
-            if (insertStmt != null) {
-                insertStmt.close();
+            if (deleteStmt != null) {
+            	deleteStmt.close();
             }
         }
     }

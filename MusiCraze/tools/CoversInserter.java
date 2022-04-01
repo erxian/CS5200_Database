@@ -3,6 +3,7 @@ package musicraze.tools;
 import musicraze.dal.*;
 import musicraze.model.*;
 
+import java.util.Date;
 import java.util.List;
 
 public class CoversInserter  {
@@ -10,9 +11,15 @@ public class CoversInserter  {
   public static void main(String[] args) throws Exception {
     SongsDao songsDao = SongsDao.getInstance();
     CoversDao coversDao = CoversDao.getInstance();
+    AlbumsDao albumsDao = AlbumsDao.getInstance();
+    ArtistsDao artistsDao = ArtistsDao.getInstance();
 
-    Songs songForCovers1 = songsDao.create(new Songs("songForCovers1", 12345, 2343));
-    Songs songForCovers2 = songsDao.create(new Songs("songForCovers2", 12345, 2343));
+    Albums album1 = albumsDao.getAlbumById(1);
+    Artists artist1 = artistsDao.getArtistById(1);
+    
+    
+    Songs songForCovers1 = songsDao.create(new Songs("songForCovers1", artist1, album1));
+    Songs songForCovers2 = songsDao.create(new Songs("songForCovers2", artist1, album1));
 
     
     Covers coverTest1 = coversDao.create(new Covers("Cover1", "JB1", "www.youtube.com/1", songForCovers1));

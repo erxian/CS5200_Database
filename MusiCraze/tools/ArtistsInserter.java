@@ -4,7 +4,7 @@ import musicraze.dal.*;
 import musicraze.model.*;
 import java.util.List;
 
-public class Inserter {
+public class ArtistsInserter {
 
   public static void main(String[] args) throws Exception {
 		ArtistsDao artistsDao = ArtistsDao.getInstance();
