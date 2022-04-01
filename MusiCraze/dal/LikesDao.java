@@ -57,7 +57,7 @@ public class LikesDao {
             insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             insertStmt.setString(1, like.getUser().getUserName());
             insertStmt.setInt(2, like.getSong().getSongId());
-            insertStmt.setDate(3, (java.sql.Date) like.getCreatedAt());
+            insertStmt.setTimestamp(3, new Timestamp(like.getCreatedAt().getTime()));
             insertStmt.executeUpdate();
 
             resultKey = insertStmt.getGeneratedKeys();

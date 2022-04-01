@@ -59,7 +59,7 @@ public class CommentsDao {
             insertStmt.setString(1, comments.getUser().getUserName());
             insertStmt.setInt(2, comments.getSong().getSongId());
             insertStmt.setString(3, comments.getContent());
-            insertStmt.setDate(4, (java.sql.Date) (comments.getCreatedAt()));
+            insertStmt.setTimestamp(4, new Timestamp(comments.getCreatedAt().getTime()));
             insertStmt.executeUpdate();
 
             int commentId = -1;
