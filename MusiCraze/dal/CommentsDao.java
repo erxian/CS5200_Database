@@ -15,7 +15,7 @@ public class CommentsDao {
                     "WHERE CommentId = ?;";
     private static final String SELECT_BY_USERNAME =
             "SELECT * " +
-                    "FROM Comments INNER JOIN Users" +
+                    "FROM Comments INNER JOIN Users " +
                     "ON Users.UserName = Comments.UserName " +
                     "WHERE Users.UserName = ?;";
     private static final String SELECT_BY_SONG_ID =
@@ -62,6 +62,7 @@ public class CommentsDao {
             insertStmt.setTimestamp(4, new Timestamp(comments.getCreatedAt().getTime()));
             insertStmt.executeUpdate();
 
+            resultKey = insertStmt.getGeneratedKeys();
             int commentId = -1;
             if(resultKey.next()) {
                 commentId = resultKey.getInt(1);
