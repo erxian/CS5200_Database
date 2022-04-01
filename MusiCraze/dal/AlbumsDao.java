@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,8 +17,8 @@ import java.util.List;
 
 public class AlbumsDao {
 	  private static final String INSERT =
-		      "INSERT INTO Albums(AlbumId, AlbumSpotifyId, Name, Year, ReleaseDate, Duration) VALUES(?,?,?,?,?,?);";
-	  private static final String DELETE = "DELETE FROM Albums WHERE Albums.Name=?;";
+		      "INSERT INTO Albums(AlbumSpotifyId, Name, Year, ReleaseDate, Duration) VALUES(?,?,?,?,?);";
+	  private static final String DELETE = "DELETE FROM Albums WHERE AlbumId=?;";
 	  private static AlbumsDao instance = null;
 	  protected ConnectionManager connectionManager;
 
@@ -35,16 +36,28 @@ public class AlbumsDao {
 	  public Albums create(Albums album) throws SQLException {
 	    Connection connection = null;
 	    PreparedStatement insertStmt = null;
+	    ResultSet resultKey = null;
 	    try {
 	      connection = this.connectionManager.getConnection();
-	      insertStmt = connection.prepareStatement(INSERT);
-	      insertStmt.setInt(1, album.getAlbumId());
-	      insertStmt.setString(2, album.getAlbumSpotifyId());
-	      insertStmt.setString(3, album.getName());
-	      insertStmt.setInt(4, album.getYear());
-	      insertStmt.setDate(5, new java.sql.Date(album.getReleaseDate().getTime()));
-	      insertStmt.setInt(6, album.getDuration());
+	      insertStmt = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
+	      
+	      insertStmt.setString(1, album.getAlbumSpotifyId());
+	      insertStmt.setString(2, album.getName());
+	      insertStmt.setInt(3, album.getYear());
+	      insertStmt.setDate(4, new java.sql.Date(album.getReleaseDate().getTime()));
+	      insertStmt.setInt(5, album.getDuration());
 	      insertStmt.executeUpdate();
+	      
+	      resultKey = insertStmt.getGeneratedKeys();
+
+	      int albumId = -1;
+	      if (resultKey.next()) {
+	    	  albumId = resultKey.getInt(1);
+	       } else {
+	          throw new SQLException("Unable to retrieve auto-generated key");
+	       }
+	      
+	      album.setAlbumId(albumId);
 	      return album;
 	    } catch (SQLException e) {
 	      e.printStackTrace();
@@ -56,6 +69,9 @@ public class AlbumsDao {
 	      if (insertStmt != null) {
 	        insertStmt.close();
 	      }
+	      if (resultKey != null) {
+	          resultKey.close();
+	      }
 	    }
 	  }
 	  
@@ -66,7 +82,7 @@ public class AlbumsDao {
 		    try {
 		      connection = this.connectionManager.getConnection();
 		      deleteStmt = connection.prepareStatement(DELETE);
-		      deleteStmt.setString(1, album.getName());
+		      deleteStmt.setInt(1, album.getAlbumId());
 		      int numRecordsAffected = deleteStmt.executeUpdate();
 		      if (numRecordsAffected == 0) {
 		        throw new SQLException("Unable to delete album.");

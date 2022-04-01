@@ -25,23 +25,27 @@ public class AlbumsInserter {
 		
 		// INSERT objects from our model.
 		Albums album1 = new Albums("asasd45", "Yesterday once more", 1994, new Date(), 14535);
-		albumsDao.delete(album1);
 		album1 = albumsDao.create(album1);
+		
 		Albums album2 = new Albums("sdfgsdfg456", "Mayday", 1995, new Date(), 145885);
-		albumsDao.delete(album2);
 		album2 = albumsDao.create(album2);
+		
+		
 		Albums album3 = new Albums("ss33asd45", "New World", 1999, new Date(), 145225);
-		albumsDao.delete(album3);
 		album3 = albumsDao.create(album3);
-
-	
+		
 		
 		// READ.
 		List<Albums> pList1 = albumsDao.getAlbumsFromAlbumName("Mayday");
 		
 		for(Albums p : pList1) {
-			System.out.format("Looping Albums: Name: %s ReleaseDate: %s Duration: %s \n",
-					p.getName(), p.getReleaseDate().toString(), p.getDuration());
+			System.out.format("Looping Albums: AlbumId:%s Name: %s ReleaseDate: %s Duration: %s \n",
+					p.getAlbumId(), p.getName(), p.getReleaseDate().toString(), p.getDuration());
 		}
+		
+		// DELETE
+		albumsDao.delete(album2);
+
 	}
+	
 }
