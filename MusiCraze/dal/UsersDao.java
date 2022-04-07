@@ -225,4 +225,12 @@ public class UsersDao extends PersonsDao {
       }
     }
   }
+
+  public Users authenticate(String userName, String password) throws SQLException {
+    Users user = this.getUserByUserName(userName);
+    if (user != null && user.getPassword().equals(password)) {
+      return user;
+    }
+    return null;
+  }
 }

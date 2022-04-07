@@ -1,6 +1,9 @@
 package musicraze.model;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class Users extends Persons {
@@ -45,8 +48,17 @@ public class Users extends Persons {
     return this.bornDate;
   }
 
+  public String getBornDateStr() {
+    return new SimpleDateFormat("yyyy-MM-dd").format(this.bornDate);
+  }
+
   public Instant getJoinDate() {
     return this.joinDate;
+  }
+
+  public String getJoinDateStr() {
+    return DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(ZoneId.of("UTC"))
+        .format(this.joinDate);
   }
 
   public void setAvatar(String avatar) {
