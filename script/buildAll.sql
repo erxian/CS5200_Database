@@ -186,7 +186,8 @@ CREATE TABLE PlaylistSongContains(
   CONSTRAINT fk_PlayListSongContains_SongId
     FOREIGN KEY (SongId)
     REFERENCES Songs(SongId)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT uq_PlaylistId_SongId UNIQUE(PlaylistId, SongId)
 
 );
 
