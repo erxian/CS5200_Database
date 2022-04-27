@@ -137,7 +137,7 @@ CREATE TABLE Comments(
     UserName VARCHAR(255),
     SongId INT NOT NULL,
     Content VARCHAR(200),
-    CreatedAt DATE,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT pk_Comments_CommentId PRIMARY KEY(CommentId),
     CONSTRAINT fk_Comments_UserName FOREIGN KEY(UserName)
 		REFERENCES Persons(UserName)
